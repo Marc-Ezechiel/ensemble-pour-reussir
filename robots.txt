@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://ensemble-pour-reussir.netlify.app/sitemap.xml
