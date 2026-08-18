@@ -307,6 +307,17 @@ function applyLanguage(lang) {
     document.documentElement.setAttribute('lang', lang);
   }
 
+  // Adapte chaque champ du formulaire (clavier/autocorrection/alignement du texte tapé)
+  document.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"], textarea').forEach(field => {
+    field.setAttribute('lang', lang);
+    field.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+  });
+
+  // Champs qui restent toujours en écriture normale, même en arabe (dates, numéros)
+  document.querySelectorAll('input[type="date"], input[type="tel"]').forEach(field => {
+    field.setAttribute('dir', 'ltr');
+  });
+
   // Mémorise le choix
   localStorage.setItem('epr_lang', lang);
 
