@@ -30,6 +30,14 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
     document.querySelector(a.getAttribute('href'))?.scrollIntoView({ behavior: 'smooth' });
   });
 });
+await window.supabaseClient.from('eleves').insert({
+  nom: document.querySelector('[name="nom"]').value,
+  prenom: document.querySelector('[name="prenom"]').value,
+  email: document.querySelector('[name="email"]').value,
+  telephone: document.querySelector('[name="telephone"]').value,
+  pays: document.querySelector('[name="pays"]').value,
+  classe: document.querySelector('[name="classes"]').value
+});
 
 // Envoi du formulaire d'inscription vers Netlify Forms (sans quitter la page)
 const inscriptionForm = document.querySelector('form[name="inscription"]');
