@@ -9,27 +9,105 @@
   <meta name="google-site-verification" content="JXXeekHDiM4y1VrjVDLthlKM9vB9q1Ucb6lwirZRrdw" />
   <link rel="stylesheet" href="monsite.css">
   <link rel="stylesheet" href="style.css">
-  <script src="monster.js" type="text/javascript" charset="utf-8" defer></script>
+
+  <script src="main.js" type="text/javascript" charset="utf-8" defer></script>
   <script src="i18n.js" type="text/javascript" charset="utf-8" defer></script>
+  <script src="pays_dropdown.js" defer></script>
+  <script src="supabase-config.js" type="module"></script>
+  <script src="indicatifs_et_groupes.js" defer></script>
+
   <style>
+    /* ---- Sélecteur de langue ---- */
     nav { flex-wrap: wrap; row-gap: 8px; }
+    .nav-actions { display: flex; align-items: center; gap: 10px; order: 4; }
     .lang-switcher {
-      display:flex; gap:2px; align-items:center; order: 5; width: 100%; justify-content: center;
-      background: rgba(255,255,255,.15); padding: 3px; border-radius: 20px; max-width: 180px; margin: 0 auto;
+      display:flex; 
+      gap:2px; 
+      align-items:center; 
+      order: 5; 
+      width: 100%; 
+      justify-content: center;
+      background: rgba(255,255,255,.15); 
+      padding: 3px; 
+      border-radius: 20px; 
+      max-width: 180px; 
+      margin: 0 auto;
     }
     .lang-btn {
-      border: none; background: transparent; border-radius: 16px; padding: 5px 14px;
-      font-size: .75rem; font-weight: 600; cursor: pointer; color: #fff; opacity: .75;
-      transition: all .2s ease; letter-spacing: .5px;
+      border: none; 
+      background: transparent; 
+      border-radius: 16px; 
+      padding: 5px 14px;
+      font-size: .75rem; 
+      font-weight: 600; 
+      cursor: pointer; 
+      color: #fff; 
+      opacity: .75;
+      transition: all .2s ease; 
+      letter-spacing: .5px;
     }
-    .lang-btn.active { background: #fff; color: #16a868; opacity: 1; }
-    html[dir="rtl"] body { text-align: right; }
+    .lang-btn.active { 
+      background: #fff; 
+      color: #16a868; 
+      opacity: 1; 
+      
+    }
+    html[dir="rtl"] body { 
+      text-align: right; }
     @media (min-width: 768px) {
-      .lang-switcher { width: auto; order: initial; margin-left: 12px; margin-right: 0; }
+      .lang-switcher { 
+        width: auto; 
+        order: initial; 
+        margin-left: 12px; 
+        margin-right: 0; }
     }
+
+    /* ---- Bouton connexion ---- */
+    .btn-outline-nav {
+      background:rgba(255,255,255,.15); 
+      border: none; 
+      border-radius: 20px;
+      padding: 6px 16px; 
+      font-size: .82rem; 
+      font-weight: 600; 
+      cursor: pointer; 
+      color: #fff;
+      opacity: .75;
+      transition: all .2s ease;
+      letter-spacing: .5px;
+    }
+
+    /* ---- Modal connexion ---- */
+    .modal-overlay{
+      display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);
+      z-index:200;align-items:center;justify-content:center;padding:20px;
+    }
+    .modal-overlay.open{display:flex;}
+    .modal{
+      background:#fff;border-radius:14px;max-width:380px;width:100%;
+      padding:32px 26px;position:relative;font-family:inherit;
+    }
+    .modal-close{
+      position:absolute;top:14px;right:16px;background:none;border:none;
+      font-size:1.3rem;cursor:pointer;color:#666;
+    }
+    .modal h3{margin-bottom:6px;}
+    .modal .sub{color:#666;font-size:.88rem;margin-bottom:20px;}
+    .modal input{
+      width:100%;padding:11px 14px;border-radius:8px;border:1px solid #ddd;
+      margin-bottom:14px;font-size:.95rem;
+    }
+    .modal button[type="submit"]{
+      width:100%;padding:12px;border:none;border-radius:8px;
+      background:#16a868;color:#fff;font-weight:600;cursor:pointer;font-size:.95rem;
+    }
+    .form-msg{font-size:.85rem;margin-top:12px;text-align:center;min-height:18px;}
+    .form-msg.error{color:#c0392b;}
+    .form-msg.success{color:#16a868;}
   </style>
 </head>
 <body>
+
 <nav>
   <div class="nav-logo">
     <img src="Moi.jpeg" alt="Logo" width="50">
@@ -47,6 +125,11 @@
     </svg>
     <input type="text" placeholder="Rechercher…" data-i18n-placeholder="nav.search_placeholder" id="searchInput" oninput="handleSearch(this.value)"/>
   </div>
+  <div class="nav-actions">
+    <button class="btn-outline-nav" onclick="document.getElementById('login-modal').classList.add('open')">
+      Se connecter
+    </button>
+  </div>
   <div class="lang-switcher">
     <button class="lang-btn" data-lang="fr">FR</button>
     <button class="lang-btn" data-lang="en">EN</button>
@@ -56,6 +139,22 @@
     <span></span>
   </button>
 </nav>
+
+<!-- Modal de connexion élève -->
+<div class="modal-overlay" id="login-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="document.getElementById('login-modal').classList.remove('open')">×</button>
+    <h3>Connexion élève</h3>
+    <p class="sub">Entre ton email et ton code de connexion reçu après validation de ton paiement.</p>
+    <form id="login-form">
+      <input type="email" id="login-email" placeholder="Ton email" required>
+      <input type="text" id="login-code" placeholder="Ton code de connexion (6 caractères)" required maxlength="6">
+      <button type="submit">Se connecter</button>
+      <div class="form-msg" id="login-msg"></div>
+    </form>
+  </div>
+</div>
+
 <header>
   <div class="hero-badge" data-i18n="hero.badge">🎓 Inscriptions ouvertes</div>
   <h1 data-i18n="hero.title">Inscrivez-vous au sein des savants mystiques Arabia</h1>
@@ -69,6 +168,7 @@
     <span data-i18n="hero.scroll">Défiler</span>
   </div>
 </header>
+
 <section id="a-propos">
   <h2 data-i18n="about.title">Des enseignants, des professeurs et notre grand maitre specialisé pour vous encadrez</h2>
   <p class="sub" data-i18n="about.subtitle">Depuis sa création, Ensemble Pour Reussir ne cesse d'offrir des enseignements mystiques arabia hors-repere et generalement rare a trouvé.</p>
@@ -116,6 +216,7 @@
     </div>
   </div>
 </section>
+
 <section id="classes">
   <h2 data-i18n="classes.title">Nos classes & frais d'inscription</h2>
   <p class="sub" data-i18n="classes.subtitle">Choisissez le niveau qui vous correspond. Chaque classe inclut les supports detaillés.</p><br />
@@ -206,6 +307,7 @@
     </div>
   </div>
 </section>
+
 <section id="inscription">
   <h2 data-i18n="inscription.title">Inscrivez-Vous en quelques étapes</h2>
   <p class="sub" data-i18n="inscription.subtitle">Remplissez le formulaire ci-dessous avec vos informations et joignez les documents requis.</p>
@@ -244,7 +346,9 @@
     </div>
     <div class="form-row">
       <div class="form-group">
-        <input type="text" name="pays" placeholder="Ex : Côte d'Ivoire, Sénégal…" data-i18n-placeholder="inscription.pays_placeholder"/>
+        <select name="pays" id="pays-select" required>
+          <option value="">Choisissez votre pays</option>
+        </select>
         <label data-i18n="inscription.pays_label">Pays d'origine</label>
       </div>
       <div class="form-group">
@@ -253,7 +357,7 @@
       </div>
     </div>
     <div class="form-group">
-      <input type="text" name="adresse" id="Adresse de résidence" placeholder="Quartier, Ville" data-i18n-placeholder="inscription.adresse_placeholder"/>
+      <input type="text" name="adresse" id="adresse-residence" placeholder="Quartier, Ville" data-i18n-placeholder="inscription.adresse_placeholder"/>
       <label data-i18n="inscription.adresse_label">Adresse de résidence</label>
     </div>
 
@@ -359,6 +463,7 @@
     <button class="submit-btn" type="submit" id="inscriptionSubmitBtn" data-i18n="inscription.submit_btn">✉️ Envoyer ma demande d'inscription</button>
   </form>
 </section>
+
 <section id="contact">
   <h2 data-i18n="contact.title">Nous contacter</h2>
   <p class="sub" data-i18n="contact.subtitle">Notre équipe est disponible pour répondre à toutes vos questions du lundi au samedi.</p>
@@ -374,7 +479,8 @@
         </div>
         <div>
           <strong data-i18n="contact.email_label">Adresse e-mail</strong>
-          <span>contact@ecole-excellence.com</span>
+          <!-- ⚠️ Remplace par la vraie adresse email de l'école -->
+          <span>contact@ensemblepourreussir.com</span>
         </div>
       </div>
 
@@ -433,5 +539,6 @@
   <p><span data-i18n="footer.copyright">©️ 2025 Ensemble Pour Reussir. Tous droits réservés.</span><br/>
   <span data-i18n="footer.secure">Formulaire sécurisé — Vos données sont traitées avec confidentialité.</span></p>
 </footer>
+
 </body>
 </html>
