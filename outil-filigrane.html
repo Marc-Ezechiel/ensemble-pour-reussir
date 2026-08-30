@@ -11,7 +11,7 @@
   h1{font-size:1.3rem;margin-bottom:6px;}
   p.sub{color:#9CA6AD;font-size:.88rem;margin-bottom:28px;}
   label{display:block;font-size:.85rem;margin-bottom:6px;color:#C9C2B6;}
-  input[type="text"], input[type="file"]{
+  input[type="text"], input[type="file"], input[type="url"]{
     width:100%;padding:11px 13px;border-radius:8px;border:1px solid rgba(237,230,218,.15);
     background:#232C35;color:#EDE6DA;margin-bottom:18px;font-size:.92rem;
   }
@@ -27,12 +27,13 @@
     background:rgba(192,133,82,.15);border:1px solid rgba(192,133,82,.3);
     border-radius:8px;padding:12px 14px;font-size:.8rem;color:#D9A876;margin-bottom:24px;
   }
+  #qr-canvas{display:none;}
 </style>
 </head>
 <body>
 
 <h1>🔒 Outil interne — Filigrane documents</h1>
-<p class="sub">Réservé au personnel. Ajoute un identifiant discret propre à chaque élève avant l'envoi d'un document dans un groupe.</p>
+<p class="sub">Réservé au personnel. Ajoute le nom de l'élève + un QR code vers le site sur chaque document avant l'envoi dans un groupe.</p>
 
 <div class="warning">
   Cette page n'est pas référencée et n'est liée nulle part sur le site public. Ne partage jamais son lien.
@@ -41,17 +42,24 @@
 <label>Document PDF à protéger</label>
 <input type="file" id="pdf-file" accept="application/pdf">
 
-<label>Identifiant de l'élève (ex : son code de connexion, ou "NOM-tel")</label>
-<input type="text" id="identifiant" placeholder="Ex: KOU-0778892549">
+<label>Nom complet de l'élève (apparaîtra en discret sur le document)</label>
+<input type="text" id="nom-eleve" placeholder="Ex: Kouassi Awa">
+
+<label>Lien du site (destination du QR code)</label>
+<input type="url" id="lien-site" value="https://ensemble-pour-reussir.netlify.app/">
 
 <button id="generer-btn">Générer le document filigrané</button>
 <div class="msg" id="msg"></div>
 
+<canvas id="qr-canvas"></canvas>
+
 <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
 <script>
 document.getElementById('generer-btn').addEventListener('click', async () => {
   const fileInput = document.getElementById('pdf-file');
-  const identifiant = document.getElementById('identifiant').value.trim();
+  const nomEleve = document.getElementById('nom-eleve').value.trim();
+  const lienSite = document.getElementById('lien-site').value.trim();
   const msg = document.getElementById('msg');
   const btn = document.getElementById('generer-btn');
 
@@ -63,8 +71,13 @@ document.getElementById('generer-btn').addEventListener('click', async () => {
     msg.classList.add('error');
     return;
   }
-  if (!identifiant) {
-    msg.textContent = "❌ Renseigne un identifiant pour cet élève.";
+  if (!nomEleve) {
+    msg.textContent = "❌ Renseigne le nom de l'élève.";
+    msg.classList.add('error');
+    return;
+  }
+  if (!lienSite) {
+    msg.textContent = "❌ Renseigne le lien du site pour le QR code.";
     msg.classList.add('error');
     return;
   }
@@ -73,24 +86,38 @@ document.getElementById('generer-btn').addEventListener('click', async () => {
   btn.textContent = 'Traitement en cours…';
 
   try {
-    const { PDFDocument, rgb, degrees } = PDFLib;
+    const { PDFDocument, rgb } = PDFLib;
     const fileBytes = await fileInput.files[0].arrayBuffer();
     const pdfDoc = await PDFDocument.load(fileBytes);
     const pages = pdfDoc.getPages();
 
-    // Génère un code court basé sur l'identifiant + la date (discret, non déchiffrable par un élève)
     const dateCode = new Date().toISOString().slice(0, 10).replace(/-/g, '');
-    const tag = btoa(identifiant + '|' + dateCode).slice(0, 14);
+    const codeInterne = btoa(nomEleve + '|' + dateCode).slice(0, 10);
+    const texteFiligrane = nomEleve + " — " + codeInterne;
+
+    const canvas = document.getElementById('qr-canvas');
+    await QRCode.toCanvas(canvas, lienSite, { width: 120, margin: 1 });
+    const qrDataUrl = canvas.toDataURL('image/png');
+    const qrImageBytes = await fetch(qrDataUrl).then(res => res.arrayBuffer());
+    const qrImage = await pdfDoc.embedPng(qrImageBytes);
+    const qrSize = 42;
 
     pages.forEach(page => {
       const { width } = page.getSize();
-      // Filigrane très discret : petit texte gris clair, coin bas-droit
-      page.drawText(tag, {
-        x: width - 90,
-        y: 8,
+
+      page.drawText(texteFiligrane, {
+        x: width - 160,
+        y: 20,
         size: 6,
-        color: rgb(0.85, 0.85, 0.85),
-        rotate: degrees(0),
+        color: rgb(0.82, 0.82, 0.82),
+      });
+
+      page.drawImage(qrImage, {
+        x: width - qrSize - 14,
+        y: 26,
+        width: qrSize,
+        height: qrSize,
+        opacity: 0.85,
       });
     });
 
@@ -102,7 +129,7 @@ document.getElementById('generer-btn').addEventListener('click', async () => {
     a.download = 'document-protege.pdf';
     a.click();
 
-    msg.textContent = "✅ Document généré et téléchargé. Code interne : " + tag;
+    msg.textContent = "✅ Document généré. Code interne : " + codeInterne;
     msg.classList.add('success');
   } catch (err) {
     console.error(err);
