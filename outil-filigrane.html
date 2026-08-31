@@ -88,7 +88,7 @@ document.getElementById('generer-btn').addEventListener('click', async () => {
   try {
     const { PDFDocument, rgb } = PDFLib;
     const fileBytes = await fileInput.files[0].arrayBuffer();
-    const pdfDoc = await PDFDocument.load(fileBytes);
+    const pdfDoc = await PDFDocument.load(fileBytes, { ignoreEncryption: true });
     const pages = pdfDoc.getPages();
 
     const dateCode = new Date().toISOString().slice(0, 10).replace(/-/g, '');
@@ -133,7 +133,7 @@ document.getElementById('generer-btn').addEventListener('click', async () => {
     msg.classList.add('success');
   } catch (err) {
     console.error(err);
-    msg.textContent = "❌ Erreur lors du traitement. Vérifie que le fichier est un PDF valide.";
+    msg.textContent = "❌ Erreur : " + (err.message || "fichier invalide");
     msg.classList.add('error');
   } finally {
     btn.disabled = false;

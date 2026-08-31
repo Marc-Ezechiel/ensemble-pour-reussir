@@ -23,8 +23,8 @@
     }
 
     body {
-      font-family: 'DM Sans', sans-serif;
-      background: var(--bleu);
+      font-family: 'DM San"s', sans-serif;
+      background: var(--vert);
       color: var(--texte);
       overflow-x: hidden;
       width: 100%;
@@ -136,6 +136,7 @@
     /*ici c'est pour l'accueil*/
     header {
       position: relative; /* nécessaire pour ::before et .scroll-arrow */
+      background: var(--bleu);
       min-height: 100vh;
       display: flex; 
       align-items: center; 
