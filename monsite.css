@@ -11,9 +11,16 @@
       --texte:   #0d1f14;
       --sub:     #4a6658;
     }
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    *, *::before, *::after { 
+      box-sizing: border-box; 
+      margin: 0; padding: 0; 
+      
+    }
 
-    html { -webkit-text-size-adjust: 100%; }
+    html { 
+      -webkit-text-size-adjust: 100%; 
+      
+    }
 
     body {
       font-family: 'DM Sans', sans-serif;
@@ -29,7 +36,8 @@
       left: 0; 
       right: 0; 
       z-index: 100;
-      display: flex; align-items: center; 
+      display: flex; 
+      align-items: center; 
       justify-content: space-between;
       padding: 0 5%;
       height: 68px;

@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=Edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#16a868">
 
   <title>ENSEMBLE POUR REUSSIR</title>
   <meta name="google-site-verification" content="JXXeekHDiM4y1VrjVDLthlKM9vB9q1Ucb6lwirZRrdw" />
   <link rel="stylesheet" href="monsite.css">
   <link rel="stylesheet" href="style.css">
-
   <script src="main.js" type="text/javascript" charset="utf-8" defer></script>
   <script src="i18n.js" type="text/javascript" charset="utf-8" defer></script>
   <script src="pays_dropdown.js" defer></script>
@@ -18,8 +18,18 @@
 
   <style>
     /* ---- Sélecteur de langue ---- */
-    nav { flex-wrap: wrap; row-gap: 8px; }
-    .nav-actions { display: flex; align-items: center; gap: 10px; order: 4; }
+    nav {
+      padding-top: env(safe-area-inset-top);
+      flex-wrap: wrap; 
+      row-gap: 8px; 
+      
+    }
+    .nav-actions { 
+      display: flex; 
+      align-items: center; 
+      gap: 10px; order: 4; 
+      
+    }
     .lang-switcher {
       display:flex; 
       gap:2px; 
