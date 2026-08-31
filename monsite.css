@@ -31,6 +31,7 @@
     }
     /* ici c'est pour l'entête*/
     nav {
+      padding-top: env(safe-area-inset-top);
       position: fixed; 
       top: 0; 
       left: 0; 
