@@ -1,4 +1,4 @@
-/* Pour les differentes couleur : tu peux modifier l'ecriture hexadecimal*/   
+  /*VARIABLES CSS (COLOR SYSTEM & SPACING)*/
     :root {
       --vert:    #0e7c4a;
       --vert-l:  #16a868;
@@ -11,17 +11,19 @@
       --texte:   #0d1f14;
       --sub:     #4a6658;
     }
+  /* Reset global : box-sizing border-box pour tous les éléments
+   Cela inclut les pseudo-éléments (::before, ::after) */
     *, *::before, *::after { 
       box-sizing: border-box; 
       margin: 0; padding: 0; 
       
     }
-
+    /* Évite le zoom automatique du texte sur certains navigateurs mobiles */
     html { 
       -webkit-text-size-adjust: 100%; 
       
     }
-
+    /* Configuration du body */
     body {
       font-family: 'DM San"s', sans-serif;
       background: var(--vert);
@@ -29,7 +31,9 @@
       overflow-x: hidden;
       width: 100%;
     }
-    /* ici c'est pour l'entête*/
+/* Navigation bar fixe en haut
+   - z-index: 100 pour rester au-dessus du contenu
+   - backdrop-filter: blur pour effet de verre (premium look) */
     nav {
       position: fixed; 
       top: 0; 
@@ -46,14 +50,16 @@
       box-shadow: 0 2px 20px rgba(0,0,0,0.15);
       gap: 1rem;
     }
+    /* Logo/image (avatar du coach) */
     img {
       width: 40px;
       height: 40px;
       border-radius: 15px;
       display: flex;
-      flex-shrink: 0;
+      flex-shrink: 0;/* Empêche le rétrécissement */
       left: 0;
     }
+    /* Logo + Texte du brand */
     .nav-logo {
       font-family: 'Playfair Display', serif;
       font-size: 1.5rem;
@@ -64,11 +70,13 @@
       gap: 10px; /* Espace entre le logo et le texte */
       flex-shrink: 0;
     }
+    /* Liste des liens de navigation */
     .nav-links { 
       display: flex; 
       gap: clamp(1.2rem, 3vw, 4rem); 
       list-style: none; 
     }
+    /* Styling des liens (accueil, À propos, etc.) */
     .nav-links a {
       color: rgba(255,255,255,0.85);
       text-decoration: none;
@@ -77,6 +85,7 @@
       transition: color .2s;
       white-space: nowrap;
     }
+    /* Blanc pur au survol */
     .nav-links a:hover { 
       color: #fff; }
 
@@ -93,6 +102,7 @@
       cursor: pointer;
       flex-shrink: 0;
     }
+    /* Les trois barres du hamburger (lignes) */
     .nav-toggle span,
     .nav-toggle::before,
     .nav-toggle::after {
@@ -135,7 +145,10 @@
       flex-shrink:0; 
       
     }
-    /*ici c'est pour l'accueil*/
+   /* Header/Hero - Section d'accueil pleine hauteur
+   - Fond image (Pop.jpeg) en couverture
+   - Overlay de cercles SVG pour texture
+   - Contenu centré verticalement */
     header {
       position: relative; /* nécessaire pour ::before et .scroll-arrow */
       background: var(--bleu);
@@ -152,12 +165,14 @@
       background-position: center;  /* Centre l'image */
       background-attachment: scroll; /* fixed casse le scroll sur iOS */
     }
+ /* Overlay avec motif de cercles (texture) */
     header::before {
       content: '';
       position: absolute; inset: 0;
-      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='rgba(255,255,255,0.05)' stroke-width='1'%3E%3Ccircle cx='30' cy='30' r='20'/%3E%3Ccircle cx='30' cy='30' r='10'/%3E%3C/g%3E%3C/svg%3E") repeat;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='rgba(255,255,255,0.05)' stroke-width='1'%3E%3Ccircle cx='30' cy='30' r='20'/%3E%3Ccircle cx='30' cy='30' r='10'/%3E%3C/g%3E%3C/svg%3E") repeat;/*ça c'est pour les rond rond dans l'arriere plan de l'accueil */
       pointer-events: none;
     }
+    /* Badge "Nouveau", "Populaire", etc. */
     .hero-badge {
       background: rgba(255,255,255,0.18);
       border: 1px solid rgba(255,255,255,0.35);
@@ -172,6 +187,7 @@
       animation: fadeUp .7s both;
       position: relative;
     }
+   /* Titre principal H1 */
     header h1 {
       font-family: 'Playfair Display', serif;
       font-size: clamp(2.2rem, 7vw, 5.5rem);
@@ -181,10 +197,12 @@
       animation: fadeUp .7s .15s both;
       position: relative;
     }
+    /* Accent de couleur dans le titre (span avec couleur verte) */
     header h1 span { 
       color: #a0f0c8; 
       
     }
+    /* Sous-titre / Description */
     header p {
       color: rgba(255,255,255,.8);
       font-size: clamp(.95rem, 2.2vw, 1.1rem);
@@ -194,6 +212,7 @@
       animation: fadeUp .7s .3s both;
       position: relative;
     }
+    /* Conteneur des boutons CTA (Call To Action) */
     .hero-btns {
       display: flex; 
       gap: 1rem; 
@@ -202,6 +221,7 @@
       animation: fadeUp .7s .45s both;
       position: relative;
     }
+    /* Bouton Primaire (rempli blanc) */
     .btn-primary {
       background: #fff; 
       color: var(--vert);
@@ -219,6 +239,7 @@
       box-shadow: 0 8px 28px rgba(0,0,0,0.25); 
       
     }
+    /* Bouton Secondaire (outline) */
     .btn-outline {
       border: 2px solid rgba(255,255,255,.6);
       color: #fff; 
@@ -234,7 +255,7 @@
       background: rgba(255,255,255,.12); 
       border-color: #fff; 
     }
-
+/* Flèche "Scroll down" animée en bas du hero */
     .scroll-arrow {
       position: absolute; 
       bottom: 36px;
@@ -253,7 +274,9 @@
       stroke: rgba(255,255,255,.5); 
       
     }
+    /* Animation "rebond" continu */
     @keyframes bounce { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(6px)} }
+    /* Animation "fade up" - apparition en montant */
     @keyframes fadeUp { from{
       opacity:0;
       transform:translateY(24px)
@@ -264,10 +287,13 @@
       
     }
 
-    /* ── SECTIONS ── */
+    /* Toutes les sections (id="a-propos", id="classes", etc.) */
     section { 
       padding: 90px 5%; 
-      overflow: hidden; }
+      overflow: hidden; /* Évite les débordements */
+      
+    }
+    /* Label de section (petit badge avant le titre) */
     .section-label {
       display: grid;
       background: linear-gradient(135deg, #0c4da2, #1a6fd4); 
@@ -281,6 +307,7 @@
       margin-bottom: 1rem;
       text-align: center;
     }
+    /* Variante du label (gradient vert-bleu) */
     .section-label-blue { 
       display: grid;
       background: linear-gradient(135deg, #0e7c4a, #0c4da2); 
@@ -294,6 +321,7 @@
       border-radius: 30px;
       margin-bottom: 1rem;
     }
+    /* Titre H2 (utilisé dans toutes les sections) */
     h2 {
       font-family: 'Playfair Display', serif;
       font-size: clamp(1.6rem, 4vw, 2.8rem);
@@ -301,6 +329,7 @@
       color: var(--texte);
       margin-bottom: 1rem;
     }
+    /* Texte de description (sous les titres) */
     .sub { 
       color: var(--sub); 
       line-height: 1.7; 
@@ -311,12 +340,14 @@
       background: var(--blanc); 
       
     }
+    /* Grille: image gauche, features droite */
     .about-grid {
       display: grid; 
       grid-template-columns: 1fr 1fr; gap: 5%;
       align-items: center; 
       margin-top: 3rem;
     }
+    /* Container de l'image d'à propos */
     .about-img {
       border-radius: 24px; 
       overflow: hidden;
@@ -330,6 +361,7 @@
       position: relative;
       box-shadow: 0 20px 60px rgba(12,77,162,0.2);
     }
+ /* Placeholder pour l'image (si pas d'image réelle) */
 .about-img-placeholder {
   width: 100%;
   aspect-ratio: 4 / 3;
@@ -337,7 +369,7 @@
   border-radius: 12px;
   position: relative;
 }
-    .about-img-placeholder svg { 
+ .about-img-placeholder svg { 
       margin-bottom: 1rem; 
       opacity:.9; 
       
@@ -351,6 +383,7 @@
   top: 0;
   left: 0;
 }
+/* Liste des features/avantages */
     .about-features { 
       display: flex; 
       flex-direction: column; 
@@ -358,6 +391,7 @@
       margin-top: 2rem; 
       
     }
+    /* Chaque item feature (icône + titre + description) */
     .feature-item {
       display: flex; 
       align-items: flex-start; 
@@ -367,6 +401,7 @@
       border-radius: 14px; 
       border-left: 4px solid var(--vert);
     }
+    /* Icône dans le feature item */
     .feature-icon {
       width: 40px; 
       height: 40px; 
@@ -396,12 +431,15 @@
       background: var(--gris); 
       
     }
+    /* Grille réactive: auto-fill crée autant de colonnes que possible
+   Chaque colonne: min 260px, max adaptable */
     .classes-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(min(260px, 100%), 1fr));
       gap: 1.5rem; 
       margin-top: 3rem;
     }
+    /* Chaque carte de classe */
     .class-card {
       background: var(--vert-ll) ; 
       border-radius: 20px;
@@ -414,6 +452,7 @@
       box-shadow: 0 12px 40px rgba(0,0,0,0.12); 
       
     }
+    /* Haut de la carte (avec gradient et emoji/texte) */
     .card-header {
       height: 140px;
       display: flex; 
@@ -425,6 +464,7 @@
       position: relative;
       
     }
+    /* Variantes de couleur pour les headers */
     .card-header.green { 
       background: linear-gradient(135deg, #0e7c4a, #16a868); 
       
@@ -441,6 +481,7 @@
       background: linear-gradient(135deg, #0c4da2, #052a6e); 
       
     }
+    /* Corps de la carte (texte + prix) */
     .card-body { 
       padding: 1.4rem; 
       background: white;
@@ -458,6 +499,7 @@
       margin-bottom: 1rem; 
       
     }
+    /* Badge prix */
     .price-tag {
       display: inline-flex; 
       align-items: baseline; 
@@ -478,6 +520,7 @@
       background: #fff;
       
     }
+    /* Container du formulaire */
     .form-wrapper {
       max-width: 820px; 
       margin: 3rem auto 0;
@@ -490,9 +533,11 @@
       width: 100%;
       animation: slideIn 0.8s ease-out;
     }
+    /* Titre des sections du formulaire (ex: "Informations personnelles") */
     .form-section-title {
       font-family: 'Playfair Display', serif;
-      font-size: 1.1rem; color: var(--vert);
+      font-size: 1.1rem; 
+      ;color: var(--vert);
       border-bottom: 2px solid var(--vert-ll);
       padding-bottom: .5rem; 
       margin: 1.8rem 0 1.2rem;
@@ -500,11 +545,13 @@
     .form-section-title:first-child { margin-top: 0; 
       
     }
+    /* Ligne du formulaire (2 colonnes: nom + prénom, par exemple) */
     .form-row { 
       display: grid; 
       grid-template-columns: 1fr 1fr; gap: 1.2rem; 
       
     }
+    /* Groupe de formulaire (input + label) */
     .form-group { 
       display: flex; 
       flex-direction: column; 
@@ -512,6 +559,7 @@
       position: relative;
       margin-bottom: 25px;
     }
+    /* Label flottant: monte au-dessus quand l'input est focalisé/complété */
     .form-group label { 
       font-weight: 900; 
       color: var(--sub); 
@@ -528,6 +576,7 @@
       text-overflow: ellipsis;
       white-space: nowrap;
     }
+    /* Inputs, selects, textareas */
     .form-group input,
     .form-group select,
     .form-group textarea {
@@ -542,6 +591,7 @@
         background: #f8f9fa;
         width: 100%;
     }
+    /* État focus des inputs */
     .form-group input:focus,
     .form-group select:focus,
     .form-group textarea:focus {
@@ -551,6 +601,7 @@
       box-shadow: 0 0 3px 3px rgba(102, 126, 234, 0.1);
       transform: translateY(-2px);
     }
+    /* Label flottant: monte quand input est valide ou focalisé */
      .form-group input:valid + label,
      .form-group textarea:valid + label,
      .form-group select:valid + label,
@@ -561,6 +612,7 @@
         font-size: 15px;
         font-weight: 600;
  }
+ /* Textarea */
     .form-group textarea { 
       resize: vertical; 
       min-height: 80px; 
@@ -620,6 +672,7 @@
       display: grid; 
       grid-template-columns: 1fr 1fr; gap: 1rem;
     }
+    /* Chaque item document */
     .doc-item {
       display: flex; 
       align-items: center; 
@@ -638,6 +691,7 @@
     .doc-item input[type="file"] { display: none; 
       
     }
+    /* Icône du document */
     .doc-icon {
       width: 36px; 
       height: 36px; 
@@ -663,7 +717,7 @@
       color: var(--sub); 
       
     }
-
+/* Bouton Submit */
     .submit-btn {
       width: 100%; 
       padding: 16px;
@@ -690,6 +744,7 @@
       background: var(--gris); 
       
     }
+    /* Grille 2 colonnes: infos gauche, formulaire/map droite */
     .contact-wrapper {
       display: grid; 
       grid-template-columns: 1fr 1fr; 
@@ -708,12 +763,14 @@
       margin-bottom: 1.5rem; 
       
     }
+    /* Chaque ligne de contact (téléphone, email, adresse) */
     .contact-detail {
       display: flex; 
       align-items: center; 
       gap: .8rem;
       margin-bottom: 1rem;
     }
+    /* Icône de contact (phone, email, location, etc.) */
     .contact-detail-icon {
       width: 40px; 
         height: 40px; 
@@ -738,7 +795,7 @@
       color: var(--sub); 
       
     }
-
+/*Boutons Réseaux Sociaux*/
     .social-links { 
       display: flex; 
       gap: .8rem; 
